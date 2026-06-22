@@ -1,0 +1,34 @@
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE devices (
+    id SERIAL PRIMARY KEY,
+    device_name VARCHAR(100) NOT NULL,
+    location VARCHAR(100),
+    owner_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+
+
+CREATE TABLE readings (
+    id SERIAL PRIMARY KEY,
+    device_id INTEGER REFERENCES devices(id) ON DELETE CASCADE,
+    temperature FLOAT NOT NULL,
+    humidity FLOAT NOT NULL,
+    air_quality_index FLOAT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE alerts (
+    id SERIAL PRIMARY KEY,
+    reading_id INTEGER REFERENCES readings(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    status VARCHAR(20) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
